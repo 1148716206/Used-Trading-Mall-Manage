@@ -31,7 +31,6 @@ const UserInfo = () => {
   ) => {
     const result: any = await request.get('/api/getUserInfo')
     if(result && result.data.code === 200) {
-      console.log(result)
       const data: any = result.data.msg.map((user:any) => ({
         key: `user_${user.id}`,
         id: user.id,
@@ -47,7 +46,6 @@ const UserInfo = () => {
 
   const searchOnClick = async () => {
     const data = formObject.getFieldsValue()
-    console.log(data)
     let dataStr = ''
     let ds = {
       ...data
@@ -71,8 +69,6 @@ const UserInfo = () => {
   };
 
   const delUser = async (id: number) => {
-    console.log('id',id)
-    console.log('id',id)
     const result: any = await request.post('/api/updateUserInfo?id=', {id})
     console.log(result)
   }
