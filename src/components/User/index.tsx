@@ -72,12 +72,11 @@ const UserInfo = () => {
 
   const delUser = async (id: number) => {
     console.log('id',id)
+    console.log('id',id)
     const result: any = await request.post('/api/updateUserInfo?id=', {id})
     console.log(result)
   }
 
-  console.log('test')
-  console.log('test')
 
 
 //重置按钮
