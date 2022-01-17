@@ -31,6 +31,7 @@ const UserInfo = () => {
   ) => {
     const result: any = await request.get('/api/getUserInfo')
     if(result && result.data.code === 200) {
+      console.log(result)
       const data: any = result.data.msg.map((user:any) => ({
         key: `user_${user.id}`,
         id: user.id,
