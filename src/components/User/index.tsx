@@ -77,6 +77,7 @@ const UserInfo = () => {
   }
 
   console.log('test')
+  console.log('test')
 
 
 //重置按钮
