@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import styles from './index.less';
 import { Space, Button, Input, Table, Form,Popconfirm, Select, message, Modal} from 'antd';
+import styles from './index.less';
 import request from '@/http';
+import qs from 'qs';
 import { OperateModal, UserEditObject } from './OperateModal';
 
 const UserInfo = () => {
-
 
   const [formObject] = Form.useForm();
   const [dataSource, setDataSource] = React.useState<any[]>([]);
@@ -14,7 +14,7 @@ const UserInfo = () => {
     total: 10,
     pageSize: 10,
     showSizeChanger: true,
-    pageSizeOptions: ['10', '50', '200', '500'],
+    pageSizeOptions: ['5', '10', '20', '50'],
     showQuickJumper: true,
   });
 
@@ -26,20 +26,38 @@ const UserInfo = () => {
 
   const loadDataSource = async (
     userParams: any,
-    pageValue: any,
+    pageCurrent: any,
     pageSize: any,
   ) => {
-    const result: any = await request.get('/api/getUserInfo')
+    console.log('userParams',userParams)
+    const ds = {
+      ...userParams,
+      current: pageCurrent,
+      size: pageSize,
+    };
+    const result: any = await request.post('api/getUserInfo',qs.stringify(ds))
+    console.log('result',result)
     if(result && result.data.code === 200) {
-      const data: any = result.data.msg.map((user:any) => ({
+
+
+
+      const data: any = result.data.data.map((user:any) => ({
         key: `user_${user.id}`,
         id: user.id,
         username: user.username,
         gender: user.gender,
         address: user.address,
-        phone: user.phone
+        phone: user.phone,
+        permission: user.permission
       }))
+      const newPageObject = {
+        ...pagination,
+        current: pageCurrent,
+        pageSize,
+        total: result.data.total
+      }
       setDataSource(data)
+      setPagination(newPageObject)
     }
 
   };
@@ -54,8 +72,7 @@ const UserInfo = () => {
       if (dataStr !== '') dataStr += '&'
       dataStr += encodeURIComponent(i) + '=' + encodeURIComponent(ds[i])
     }
-    console.log('dataStr')
-    console.log(dataStr)
+
     await loadDataSource(ds, 1, pagination.pageSize);
   };
 
@@ -70,7 +87,6 @@ const UserInfo = () => {
 
   const delUser = async (id: number) => {
     const result: any = await request.post('/api/updateUserInfo?id=', {id})
-    console.log(result)
   }
 
 
@@ -98,10 +114,10 @@ const UserInfo = () => {
                 <Form.Item label="用户 ID" name="id" initialValue="">
                   <Input placeholder="请输入..."/>
                 </Form.Item>
-                <Form.Item label="用户名" name="name" initialValue="">
+                <Form.Item label="用户名" name="username" initialValue="">
                    <Input placeholder="请输入..."/>
                 </Form.Item>
-                <Form.Item label="联系电话" name="teacherName">
+                <Form.Item label="联系电话" name="phone">
                   <Input placeholder="请输入..."/>
                 </Form.Item>
                 <Button
@@ -171,10 +187,11 @@ const UserInfo = () => {
               },
               {
                 title: '权限等级',
-                dataIndex: 'level',
-                key: 'level',
+                dataIndex: 'permission',
+                key: 'permission',
                 width: 75,
                 align: 'center',
+                render: permission => (permission === 0 ? '用户' : permission === 1 ? '管理员' : '超级管理员')
               },
               {
                 title: '操作',

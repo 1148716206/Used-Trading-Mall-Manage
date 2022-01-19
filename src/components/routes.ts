@@ -1,4 +1,4 @@
-const WEB_NAME = '二手交易商城';
+const WEB_NAME = '后台管理系统';
 
 export default [
   {
@@ -20,7 +20,7 @@ export default [
     routes:[
       {
         title: `${WEB_NAME}-用户管理`,
-        path: '/user',
+        path: '/User',
         component: '@/components/User/index',
         name: '用户管理',
         key: 'user'

@@ -11,7 +11,7 @@ if(process.env.envTye === 'dev') {
 const instance = axios.create({
   headers: {
     'x-requested-with': 'XMLHttpRequest',
-
+    // 'Content-Type': 'application/x-www-form-urlencoded',
   }
 })
 
