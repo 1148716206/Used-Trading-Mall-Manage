@@ -13,7 +13,7 @@ import {
   CalendarOutlined,
   KeyOutlined
 } from '@ant-design/icons';
-
+import logo from '../image/logo.jpg';
 
 
 import {Link} from 'umi'
@@ -38,7 +38,7 @@ export default class Index extends React.Component {
       <Layout>
 
         <Sider className='side' width={244} trigger={null} collapsible collapsed={this.state.collapsed}>
-          <div className="logo">二手商品交易商城</div>
+          <div className="logo">酷物&nbsp; 二手商品交易商城</div>
           <Menu theme="light" mode="inline" defaultSelectedKeys={['1']}>
             <SubMenu key="1" icon={<LineChartOutlined/>} title="用户管理">
               <Menu.Item key="2" icon={<UserOutlined/>}>
@@ -85,7 +85,7 @@ export default class Index extends React.Component {
               )}>
                 <a>
                   <img alt='管理员' src={portrait}/>
-                  <span style={{color: '#000'}}>系统管理员</span>
+                  <span style={{color: '#000'}}>管理员</span>
                 </a>
               </Dropdown>
             </div>

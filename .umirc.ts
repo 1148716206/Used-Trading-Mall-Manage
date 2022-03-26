@@ -1,7 +1,7 @@
 import { defineConfig } from 'umi';
 import routes from './src/components/routes';
 
-const serverUrlRoot = 'http://localhost:3000';
+const serverUrlRoot = 'http://localhost:8888';
 
 
 export default defineConfig({

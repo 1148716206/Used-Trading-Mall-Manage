@@ -35,13 +35,10 @@ const UserInfo = () => {
       current: pageCurrent,
       size: pageSize,
     };
-    const result: any = await request.post('api/getUserInfo',qs.stringify(ds))
-    console.log('result',result)
-    if(result && result.data.code === 200) {
-
-
-
-      const data: any = result.data.data.map((user:any) => ({
+    const {data}: any = await request.post('api/manageUser',qs.stringify(ds))
+    console.log('data',data)
+    if(data && data.status === 200) {
+      const newData: any = data.data.map((user:any) => ({
         key: `user_${user.id}`,
         id: user.id,
         username: user.username,
@@ -54,9 +51,9 @@ const UserInfo = () => {
         ...pagination,
         current: pageCurrent,
         pageSize,
-        total: result.data.total
+        total: data.total
       }
-      setDataSource(data)
+      setDataSource(newData)
       setPagination(newPageObject)
     }
 
@@ -86,7 +83,17 @@ const UserInfo = () => {
   };
 
   const delUser = async (id: number) => {
-    const result: any = await request.post('/api/updateUserInfo?id=', {id})
+    const {data}: any = await request.post('/api/manageDeleteUser', {id})
+    if(data.status === 200) {
+      setTimeout(() => {
+        message.success('删除成功')
+      }, 500);
+
+    } else {
+      setTimeout(() => {
+        message.error('删除失败')
+      }, 500);
+    }
   }
 
 
@@ -152,21 +159,21 @@ const UserInfo = () => {
                 title: 'ID',
                 dataIndex: 'id',
                 key: 'id',
-                width: 75,
+                width: 50,
                 align: 'center',
               },
               {
                 title: '用户名',
                 dataIndex: 'username',
                 key: 'username',
-                width: 100,
+                width: 75,
                 align: 'center',
               },
               {
                 title: '性别',
                 dataIndex: 'gender',
                 key: 'gender',
-                width: 75,
+                width: 40,
                 render: status => (status ? '男' : '女'),
                 align: 'center',
               },
@@ -174,7 +181,7 @@ const UserInfo = () => {
                 title: '联系电话',
                 dataIndex: 'phone',
                 key: 'phone',
-                width: 75,
+                width: 100,
                 align: 'center',
 
               },
@@ -182,22 +189,22 @@ const UserInfo = () => {
                 title: '收货地址 ',
                 dataIndex: 'address',
                 key: 'address',
-                width: 75,
+                width: 150,
                 align: 'center',
               },
               {
                 title: '权限等级',
                 dataIndex: 'permission',
                 key: 'permission',
-                width: 75,
+                width: 50,
                 align: 'center',
-                render: permission => (permission === 0 ? '用户' : permission === 1 ? '管理员' : '超级管理员')
+                render: permission => (permission === 0 ? '普通用户' : permission === 1 ? '管理员' : '超级管理员')
               },
               {
                 title: '操作',
                 key: 'action',
                 align: 'center',
-                width: 75,
+                width: 100,
                 render: (row: any) => (
                   <>
                   <Popconfirm
@@ -221,7 +228,7 @@ const UserInfo = () => {
                         })
                       }}
                     >
-                      编辑
+                      更改权限
                     </Button>
                   </>
                 ),

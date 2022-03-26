@@ -48,20 +48,26 @@ const OperateModal = (props: { editObject: UserEditObject; onClose: any }) => {
 
     const data = await formObject.validateFields();
 
+    console.log('获取的表单', data);
+    console.log(editObject.id);
+
     //序列化
+    var dataStr = '';
     var ds = {
       ...data,
-      id: editObject.id,
+      id: editObject.id + '',
     };
 
     if (!editObject.modalType) {
       //编辑用户信息
-      const result: any = await request.post('api/manageUpdateUser',qs.stringify(ds));
+
+      const result: any = await request.post(
+        '/api/admin/teacherInfoManagement/editTeacher',
+        qs.stringify(ds),
+      );
       console.log(result);
-      if (result.status === 200) {
-        setTimeout(() => {
-          message.success('修改成功');
-        }, 500);
+      if (result.data.code === 200) {
+        message.success('修改成功');
         if (onClose) {
           onClose();
         }
@@ -69,13 +75,13 @@ const OperateModal = (props: { editObject: UserEditObject; onClose: any }) => {
       }
     } else {
       //新增用户
-      console.log('新增用户的表单：', ds);
+      console.log('新增用户的表单：', dataStr);
       const result: any = await request.post(
-        '/api/manageInsertUser',
+        '/api/insertUserInfo',
         qs.stringify(ds),
       );
       console.log(result);
-      if (result.status === 200) {
+      if (result.data.code === 200) {
         setTimeout(() => {
           message.success('添加成功');
         }, 500);
@@ -168,18 +174,11 @@ const OperateModal = (props: { editObject: UserEditObject; onClose: any }) => {
                 </Form.Item>
               </div>
             ) : (<div className={styles.add_form}>
-                <Form.Item
-                  className="OMSelect"
-                  label="权限等级"
-                  name="permission"
-                  initialValue=""
-                  rules={[{required: true, message: '请选择权限等级'}]}
-                >
-                  <Select>
-                    <Option value=''>请选择</Option>
-                    <Option value={0}>普通用户</Option>
-                    <Option value={1}>管理员</Option>
-                  </Select>
+                <Form.Item label="用户 ID" name="name" initialValue="">
+                  <Input placeholder="请输入..."/>
+                </Form.Item>
+                <Form.Item label="用户 ID" name="name" initialValue="">
+                  <Input placeholder="请输入..."/>
                 </Form.Item>
               </div>
             )
