@@ -241,8 +241,8 @@ const Products = () => {
 
               },
               {
-                title: '旧价格',
-                key: 'old_price',
+                title: '操作',
+                key: 'operate',
                 align: 'center',
                 width: 75,
                 render: (row: any) => (
