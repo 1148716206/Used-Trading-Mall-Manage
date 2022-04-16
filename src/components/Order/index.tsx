@@ -8,15 +8,14 @@ import {
   Table,
   Form,
   Select,
-  message,
-  Modal,
+  Tooltip,
 } from 'antd';
 const { Option } = Select;
 import request from '@/http';
 import moment from 'moment';
 import qs from 'qs';
 
-// import { OperateModal, UserEditObject } from './OperateModal';
+import { OperateModal, UserEditObject } from './OperateModal';
 
 const Order = () => {
   const [formObject] = Form.useForm();
@@ -26,14 +25,15 @@ const Order = () => {
     total: 10,
     pageSize: 10,
     showSizeChanger: true,
-    pageSizeOptions: ['10', '50', '200', '500'],
+    pageSizeOptions: ['10','20', '50'],
     showQuickJumper: true,
   });
 
-  /*  const [currentEditObject, setCurrentEditObject] =
+
+  const [currentEditObject, setCurrentEditObject] =
     React.useState<UserEditObject>({
       isModalVisible: false,
-    });*/
+  });
 
   const loadDataSource = async (
     userParams: any,
@@ -144,13 +144,13 @@ const Order = () => {
     formObject.resetFields();
   };
 
-  /*  async function userEditOnClose() {
+    async function userEditOnClose() {
     await loadDataSource(
       formObject.getFieldsValue(),
       pagination.current,
       pagination.pageSize,
     );
-  }*/
+  }
 
   return (
     <div className={styles.pageContent}>
@@ -250,6 +250,14 @@ const Order = () => {
               key: 'address',
               width: 150,
               align: 'center',
+              ellipsis: {
+                showTitle: false,
+              },
+              render: (address:any) => (
+                <Tooltip placement="topLeft" title={address} color="#108ee9">
+                  {address}
+                </Tooltip>
+              ),
             },
             {
               title: '支付方式 ',
@@ -292,19 +300,20 @@ const Order = () => {
               title: '操作',
               key: 'action',
               align: 'center',
-              width: 50,
+              width: 65,
               render: (row: any) => (
                 <>
                   <Button
-                    type="link"
-                    onClick={() => {
-                      /*   setCurrentEditObject({
-                        isModalVisible: true
-                      })*/
-                    }}
-                  >
-                    编辑
-                  </Button>
+                      type="link"
+                      onClick={() => {
+                        setCurrentEditObject({
+                          ...row,
+                          isModalVisible: true
+                        })
+                      }}
+                    >
+                      编辑
+                    </Button>
                 </>
               ),
             },
@@ -316,10 +325,10 @@ const Order = () => {
           bordered
         />
       </div>
-      {/*    <OperateModal
+         <OperateModal
         editObject={currentEditObject}
         onClose={userEditOnClose}
-      />*/}
+      />
     </div>
   );
 };

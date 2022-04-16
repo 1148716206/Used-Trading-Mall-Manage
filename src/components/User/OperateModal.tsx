@@ -104,6 +104,8 @@ const OperateModal = (props: { editObject: UserEditObject; onClose: any }) => {
         onOk={modelOnOk}
         onCancel={modelOnCancel}
         destroyOnClose
+        cancelText="取消"
+				okText="确定"
       >
         <Form
           className="form"

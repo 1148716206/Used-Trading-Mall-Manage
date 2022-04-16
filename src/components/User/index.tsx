@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Button, Input, Table, Form,Popconfirm, Select, message, Modal} from 'antd';
+import { Space, Button, Input, Table, Form,Popconfirm, Tooltip, message, Modal} from 'antd';
 import styles from './index.less';
 import request from '@/http';
 import qs from 'qs';
@@ -14,7 +14,7 @@ const UserInfo = () => {
     total: 10,
     pageSize: 10,
     showSizeChanger: true,
-    pageSizeOptions: ['5', '10', '20', '50'],
+    pageSizeOptions: ['10', '20', '50'],
     showQuickJumper: true,
   });
 
@@ -191,6 +191,14 @@ const UserInfo = () => {
                 key: 'address',
                 width: 150,
                 align: 'center',
+                ellipsis: {
+                  showTitle: false,
+                },
+                render: (address:any) => (
+                  <Tooltip placement="topLeft" title={address} color="#108ee9">
+                    {address}
+                  </Tooltip>
+                ),
               },
               {
                 title: '权限等级',

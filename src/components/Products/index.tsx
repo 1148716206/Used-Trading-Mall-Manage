@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Button, Input, Table, Form,Popconfirm, Select, message, Modal} from 'antd';
+import { Space, Button, Input, Table, Form,Popconfirm, Tooltip, message, Modal} from 'antd';
 import styles from './index.less';
 import request from '@/http';
 import moment from 'moment';
@@ -16,14 +16,13 @@ const Products = () => {
     total: 10,
     pageSize: 10,
     showSizeChanger: true,
-    pageSizeOptions: ['5', '10', '20', '50'],
+    pageSizeOptions: [ '10', '20', '50'],
     showQuickJumper: true,
   });
 
   const [currentEditObject, setCurrentEditObject] =
     React.useState<UserEditObject>({
       isModalVisible: false,
-      modalType: 'add',
     });
 
   const loadDataSource = async (
@@ -34,15 +33,13 @@ const Products = () => {
     console.log('userParams',userParams)
     const ds = {
       ...userParams,
+      goods_id: userParams ? parseInt(userParams.goods_id) : null,
       current: pageCurrent,
       size: pageSize,
     };
     const {data}: any = await request.post('api/manageGoods',qs.stringify(ds))
     console.log('result',data)
     if(data.status === 200) {
-
-
-
       const newData: any = data.data.map((user:any) => ({
         key: `user_${user.goods_id}`,
         goods_id: user.goods_id,
@@ -71,16 +68,9 @@ const Products = () => {
 
   const searchOnClick = async () => {
     const data = formObject.getFieldsValue()
-    let dataStr = ''
-    let ds = {
-      ...data
-    }
-    for (var i in ds) {
-      if (dataStr !== '') dataStr += '&'
-      dataStr += encodeURIComponent(i) + '=' + encodeURIComponent(ds[i])
-    }
 
-    await loadDataSource(ds, 1, pagination.pageSize);
+
+    await loadDataSource(data, 1, pagination.pageSize);
   };
 
   useEffect(() => {
@@ -92,8 +82,14 @@ const Products = () => {
     await loadDataSource(formObject.getFieldsValue(), page.current, page.pageSize);
   };
 
-  const delUser = async (id: number) => {
-    const result: any = await request.post('/api/updateUserInfo?id=', {id})
+  const delGoods = async (goods_id: number) => {
+    const {data}: any = await request.post('/api/manageDeleteGoods', {goods_id})
+    if (data.status === 200) {
+      setTimeout(() => {
+        loadDataSource(null, 1, pagination.pageSize);
+        message.success(data.msg);
+      }, 500);
+    }
   }
 
 
@@ -119,13 +115,13 @@ const Products = () => {
           <div className={styles.search__form}>
             <Form layout='inline' form={formObject}>
               <Space>
-                <Form.Item label="用户 ID" name="id" initialValue="">
+                <Form.Item label="商品 ID" name="goods_id" initialValue="">
                   <Input placeholder="请输入..."/>
                 </Form.Item>
-                <Form.Item label="用户名" name="username" initialValue="">
+                <Form.Item label="成色" name="quality" initialValue="">
                    <Input placeholder="请输入..."/>
                 </Form.Item>
-                <Form.Item label="联系电话" name="phone">
+                <Form.Item label="发布人" name="username">
                   <Input placeholder="请输入..."/>
                 </Form.Item>
                 <Button
@@ -140,19 +136,6 @@ const Products = () => {
             </Form>
           </div>
         </div>
-        <div className={styles.add_button}>
-          <Button
-            type="primary"
-            onClick={() => {
-              setCurrentEditObject({
-                isModalVisible: true,
-                modalType: 'add'
-              })
-            }}
-          >
-            新增用户
-          </Button>
-        </div>
         <div className={styles.mainTable}>
           <Table
             columns={[
@@ -162,6 +145,7 @@ const Products = () => {
                 key: 'goods_id',
                 width: 75,
                 align: 'center',
+                render: v => (<span>{parseInt(v)}</span>)
               },
               {
                 title: '商品名',
@@ -192,6 +176,14 @@ const Products = () => {
                 key: 'goods_desc',
                 width: 75,
                 align: 'center',
+                ellipsis: {
+                  showTitle: false,
+                },
+                render: (goods_desc:any) => (
+                  <Tooltip placement="topLeft" title={goods_desc} color="#108ee9">
+                    {goods_desc}
+                  </Tooltip>
+                ),
               },
               {
                 title: '成色 ',
@@ -248,9 +240,9 @@ const Products = () => {
                 render: (row: any) => (
                   <>
                   <Popconfirm
-                    title="确定删除该用户吗?"
+                    title="确定删除该商品吗?"
                      onConfirm={() => {
-                       delUser(row.id)
+                      delGoods(row.goods_id)
                      }}
                     okText="确认"
                     cancelText="取消"
