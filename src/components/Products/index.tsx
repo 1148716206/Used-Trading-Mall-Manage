@@ -53,6 +53,7 @@ const Products = () => {
         create_time: user.create_time,
         username: user.username,
         browse_num: user.browse_num,
+        status:user.status
       }))
       const newPageObject = {
         ...pagination,
@@ -88,6 +89,25 @@ const Products = () => {
       setTimeout(() => {
         loadDataSource(null, 1, pagination.pageSize);
         message.success(data.msg);
+      }, 500);
+    }
+  }
+
+  const checkGoods = async (goods_id: number) => {
+    const {data}: any = await request.post('/api/manageCheckGoods', {goods_id})
+    if (data.status === 200) {
+      setTimeout(() => {
+        loadDataSource(null, 1, pagination.pageSize);
+        message.success('上架成功');
+      }, 500);
+    }
+  }
+  const removeGoods = async (goods_id: number) => {
+    const {data}: any = await request.post('/api/manageRemoveGoods', {goods_id})
+    if (data.status === 200) {
+      setTimeout(() => {
+        loadDataSource(null, 1, pagination.pageSize);
+        message.success('下架成功');
       }, 500);
     }
   }
@@ -143,7 +163,7 @@ const Products = () => {
                 title: 'ID',
                 dataIndex: 'goods_id',
                 key: 'goods_id',
-                width: 75,
+                width: 40,
                 align: 'center',
                 render: v => (<span>{parseInt(v)}</span>)
               },
@@ -151,8 +171,16 @@ const Products = () => {
                 title: '商品名',
                 dataIndex: 'goods_name',
                 key: 'goods_name',
-                width: 100,
+                width: 75,
                 align: 'center',
+                ellipsis: {
+                  showTitle: false,
+                },
+                render: (goods_name:any) => (
+                  <Tooltip placement="topLeft" title={goods_name} color="#108ee9">
+                    {goods_name}
+                  </Tooltip>
+                ),
               },
               {
                 title: '图片',
@@ -166,7 +194,7 @@ const Products = () => {
                 title: '数量',
                 dataIndex: 'goods_number',
                 key: 'goods_number',
-                width: 75,
+                width: 40,
                 align: 'center',
 
               },
@@ -189,14 +217,14 @@ const Products = () => {
                 title: '成色 ',
                 dataIndex: 'quality',
                 key: 'quality',
-                width: 75,
+                width: 40,
                 align: 'center',
               },
               {
                 title: '新价格',
                 dataIndex: 'new_price',
                 key: 'new_price',
-                width: 75,
+                width: 50,
                 align: 'center',
 
               },
@@ -204,7 +232,7 @@ const Products = () => {
                 title: '旧价格',
                 dataIndex: 'old_price',
                 key: 'old_price',
-                width: 75,
+                width: 50,
                 align: 'center',
 
               },
@@ -220,7 +248,7 @@ const Products = () => {
                 title: '发布时间',
                 dataIndex: 'create_time',
                 key: 'create_time',
-                width: 75,
+                width: 55,
                 align: 'center',
                 render: v => <div>{moment(v).format('YYYY-MM-DD HH:mm:ss')}</div>
               },
@@ -228,15 +256,23 @@ const Products = () => {
                 title: '浏览量',
                 dataIndex: 'browse_num',
                 key: 'browse_num',
-                width: 75,
+                width: 50,
                 align: 'center',
 
+              },
+              {
+                title: '状态',
+                dataIndex: 'status',
+                key: 'status',
+                width: 40,
+                align: 'center',
+                render: status => (status ? '已上架' : '未审核'),
               },
               {
                 title: '操作',
                 key: 'operate',
                 align: 'center',
-                width: 75,
+                width: 120,
                 render: (row: any) => (
                   <>
                   <Popconfirm
@@ -262,6 +298,34 @@ const Products = () => {
                     >
                       编辑
                     </Button>
+                    {row.status ?
+                    <Popconfirm
+                    title="是否下架该商品?"
+                     onConfirm={() => {
+                      removeGoods(row.goods_id)
+                     }}
+                    okText="确认"
+                    cancelText="取消"
+                  >
+                     <Button type="link">
+                      下架
+                    </Button>
+                  </Popconfirm>
+                    :
+                    <Popconfirm
+                    title="是否允许该商品上架?"
+                     onConfirm={() => {
+                      checkGoods(row.goods_id)
+                     }}
+                    okText="确认"
+                    cancelText="取消"
+                  >
+                     <Button type="link">
+                      上架
+                    </Button>
+                  </Popconfirm>
+                    }
+
                   </>
                 ),
               },

@@ -175,7 +175,7 @@ const Message = () => {
                 render: (row: any) => (
                   <>
                   <Popconfirm
-                    title="确定删除该用户吗?"
+                    title="确定删除该留言吗?"
                      onConfirm={() => {
                        delUser(row.id)
                      }}

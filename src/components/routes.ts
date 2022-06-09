@@ -12,6 +12,12 @@ export default [
     name: '500',
     key: '500'
   }, {
+    title: `${WEB_NAME}-登录`,
+    path: '/login',
+    component: '@/components/Login',
+    name: '登录',
+    key: 'login'
+  }, {
     title: `${WEB_NAME}-首页`,
     path: '/',
     component: '@/layout/index',
@@ -42,7 +48,7 @@ export default [
         component: '@/components/Message/index',
         name: '留言管理',
         key: 'message'
-      },
+      }
     ]
   },
 

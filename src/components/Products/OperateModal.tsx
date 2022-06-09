@@ -43,14 +43,12 @@ const OperateModal = (props: { editObject: UserEditObject; onClose: any }) => {
   }, [editObject]);
 
   const modelOnOk = async () => {
-
     const formData = await formObject.validateFields();
     const sendData = {
       ...formData,
       goods_id:editObject.goods_id
     }
     console.log('sendData', sendData);
-
     const {data}: any = await request.post(
       '/api/manageUpdateGoods',
       qs.stringify(sendData),
@@ -64,7 +62,6 @@ const OperateModal = (props: { editObject: UserEditObject; onClose: any }) => {
         //点击取消  关闭窗口
         onClose();
       }
-
       setModalVisible(false); // 关闭窗口
     }
   };

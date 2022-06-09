@@ -14,7 +14,7 @@ export default defineConfig({
   base: '/',
   publicPath: '/',
   inlineLimit: 10,
-  history: { type: 'hash', options: { hashType: 'hashbang'} },
+  history: { type: 'browser'},
   routes,
   fastRefresh: {},
   proxy: {

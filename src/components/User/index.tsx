@@ -41,6 +41,7 @@ const UserInfo = () => {
       const newData: any = data.data.map((user:any) => ({
         key: `user_${user.id}`,
         id: user.id,
+        nickname: user.nickname,
         username: user.username,
         gender: user.gender,
         address: user.address,
@@ -160,6 +161,13 @@ const UserInfo = () => {
                 dataIndex: 'id',
                 key: 'id',
                 width: 50,
+                align: 'center',
+              },
+              {
+                title: '昵称',
+                dataIndex: 'nickname',
+                key: 'nickname',
+                width: 75,
                 align: 'center',
               },
               {

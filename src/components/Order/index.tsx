@@ -265,7 +265,7 @@ const Order = () => {
               key: 'payment',
               width: 50,
               align: 'center',
-              render: v => v === 'WeChatPay' ? '微信支付' : v === 'CMB' ? '招商银行' : '支付宝'
+              render: v => v === 'offline' ? '线下支付' : '线上支付'
             },
             {
               title: '创建时间',
@@ -294,7 +294,7 @@ const Order = () => {
               width: 75,
               align: 'center',
               render: (status) =>
-                status === 0 ? '待发货' : status === 1 ? '待收货' : '待评价',
+                status === 0 ? '待支付' : status === 1 ? '待发货' : '待收货',
             },
             {
               title: '操作',

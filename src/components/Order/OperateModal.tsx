@@ -37,7 +37,7 @@ interface UserEditObject {
 
 const OperateModal = (props: { editObject: UserEditObject; onClose: any }) => {
   const { editObject, onClose } = props;
-  console.log(props);
+  console.log(editObject);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [formObject] = Form.useForm();
@@ -52,7 +52,10 @@ const OperateModal = (props: { editObject: UserEditObject; onClose: any }) => {
       formObject.setFieldsValue({
         goods_name: editObject.goods_name,
         goods_num: editObject.goods_num,
-        browse_num: editObject.browse_num,
+        username: editObject.username,
+        phone: editObject.phone,
+        status: editObject.status,
+        payment: editObject.payment,
       });
     }
   }, [editObject]);
@@ -64,24 +67,17 @@ const OperateModal = (props: { editObject: UserEditObject; onClose: any }) => {
     const sendData = {
       ...data,
       id: editObject.id,
-      create_time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+      update_time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     };
 
     const result: any = await request.post(
       '/api/manageUpdateOrder',
       qs.stringify(sendData),
     );
-    console.log(result);
-    if (result.data.code === 200) {
+    if (result.data.status === 200) {
       setTimeout(() => {
-        message.success('添加成功');
+        message.success('修改成功');
       }, 500);
-
-      if (onClose) {
-        //点击取消  关闭窗口
-        onClose();
-      }
-
       setModalVisible(false); // 关闭窗口
     }
   };
